@@ -2,15 +2,12 @@ package com.suportefrancati.carsCatalogs.api.models;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+
 @Entity
 @Table(name = "carro")
+@Data
 public class Car {
 
     @Id

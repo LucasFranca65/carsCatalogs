@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/cars")
@@ -19,18 +20,35 @@ public class CarsController {
 
     @GetMapping
     public ResponseEntity<List<Car>> allCars() {
-        List<Car> car = carService.findAllCars();
-        return ResponseEntity.ok().body(car);
+        List<Car> cars = carService.findAllCars();
+        if (cars.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(cars);
+        }
     }
 
     @GetMapping("/{id}")
-    public Car carById(@PathVariable("id") Long id) {
-        return carService.findCarById(id);
+    public ResponseEntity<Car> carById(@PathVariable("id") Long id) {
+        Optional<Car> car = carService.findCarById(id);
+        return car.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
+
+        /* expressão lambda acima é o mesmo que  if (car.isPresent()) {
+            return ResponseEntity.ok().body(car.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }*/
     }
 
+
     @GetMapping("/tipo/{tipo}")
-    public List<Car> carByType(@PathVariable("tipo") String tipo) {
-        return carService.findAllCarsByType(tipo);
+    public ResponseEntity<List<Car>> carByType(@PathVariable("tipo") String tipo) {
+        List<Car> cars = carService.findAllCarsByType(tipo);
+        if (cars.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(cars);
+        }
     }
 
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -39,6 +57,7 @@ public class CarsController {
         Car car = carService.saveNewCar(carro);
         return car.toString();
     }
+
 
     @PutMapping("/{id}")
     public String updateCarById(@PathVariable("id") Long id, @RequestBody Car carro) {
