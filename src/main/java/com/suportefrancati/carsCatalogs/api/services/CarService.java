@@ -20,7 +20,7 @@ public class CarService {
 
     public List<CarDTO> findAllCars() {
 
-        return carsRepository.findAll().stream().map(CarDTO::new).collect(Collectors.toList());
+        return carsRepository.findAll().stream().map(CarDTO::create).collect(Collectors.toList());
         /*
          * mesmo que
          * List<Car> cars = carsRepository.findAll();
@@ -35,19 +35,17 @@ public class CarService {
     public Optional<CarDTO> findCarById(Long id) {
 
         Optional<Car> car = carsRepository.findById(id);
-        return car.map(value -> Optional.of(new CarDTO(value))).orElse(null);
-        /*
-        mesmo que
-        * if(car.isPresent()) {
-            return Optional.of(new CarDTO(car.get()));
-        }else  {
-            return null;
+        if (car.isPresent()) {
+            return carsRepository.findById(id).map(CarDTO::create);
+
+        } else {
+            return Optional.empty();
         }
-        * */
+
     }
 
     public List<CarDTO> findAllCarsByType(String tipo) {
-        return carsRepository.findCarByTipo(tipo).stream().map(CarDTO::new).collect(Collectors.toList());
+        return carsRepository.findCarByTipo(tipo).stream().map(CarDTO::create).collect(Collectors.toList());
     }
 
     public Car saveNewCar(Car carro) {
