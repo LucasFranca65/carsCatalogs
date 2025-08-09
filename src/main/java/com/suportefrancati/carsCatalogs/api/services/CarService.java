@@ -71,13 +71,13 @@ public class CarService {
         }
     }
 
-    public String deleteCar(Long id) {
+    public boolean deleteCar(Long id) {
         Optional<Car> optionalCar = carsRepository.findById(id);
         if (optionalCar.isPresent()) {
             carsRepository.deleteById(id);
-            return "Car deletado com sucesso";
+            return true;
         } else {
-            return "Não foi possivel deletar o carro, id não encontrado";
+            return false;
         }
     }
 

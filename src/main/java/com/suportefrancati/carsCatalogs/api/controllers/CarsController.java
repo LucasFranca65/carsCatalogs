@@ -70,7 +70,6 @@ public class CarsController {
         return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<CarDTO> updateCarById(@PathVariable("id") Long id, @RequestBody Car carro) {
         CarDTO car = carService.updateCar(id, carro);
@@ -81,9 +80,14 @@ public class CarsController {
         }
     }
 
+
     @DeleteMapping("/{id}")
-    public String deleteCarById(@PathVariable("id") Long id) {
-        return carService.deleteCar(id);
+    public ResponseEntity deleteCarById(@PathVariable("id") Long id) {
+        if (carService.deleteCar(id)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
 
     }
 }
