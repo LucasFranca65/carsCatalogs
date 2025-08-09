@@ -30,8 +30,8 @@ public class CarsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Car> getCarById(@PathVariable("id") Long id) {
-        Optional<Car> car = carService.findCarById(id);
+    public ResponseEntity<CarDTO> getCarById(@PathVariable("id") Long id) {
+        Optional<CarDTO> car = carService.findCarById(id);
         return car.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
 
         /* expressão lambda acima é o mesmo que  if (car.isPresent()) {

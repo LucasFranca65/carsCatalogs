@@ -21,11 +21,29 @@ public class CarService {
     public List<CarDTO> findAllCars() {
 
         return carsRepository.findAll().stream().map(CarDTO::new).collect(Collectors.toList());
+        /*
+         * mesmo que
+         * List<Car> cars = carsRepository.findAll();
+         * List<CarDTO> list = new ArrayList();
+         * for(Car c: cars){
+         *
+         *
+         * */
 
     }
 
-    public Optional<Car> findCarById(Long id) {
-        return carsRepository.findById(id);
+    public Optional<CarDTO> findCarById(Long id) {
+
+        Optional<Car> car = carsRepository.findById(id);
+        return car.map(value -> Optional.of(new CarDTO(value))).orElse(null);
+        /*
+        mesmo que
+        * if(car.isPresent()) {
+            return Optional.of(new CarDTO(car.get()));
+        }else  {
+            return null;
+        }
+        * */
     }
 
     public List<CarDTO> findAllCarsByType(String tipo) {
