@@ -1,5 +1,6 @@
 package com.suportefrancati.carsCatalogs.api.controllers;
 
+import com.suportefrancati.carsCatalogs.api.dto.CarDTO;
 import com.suportefrancati.carsCatalogs.api.models.Car;
 import com.suportefrancati.carsCatalogs.api.services.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class CarsController {
 
 
     @GetMapping
-    public ResponseEntity<List<Car>> allCars() {
-        List<Car> cars = carService.findAllCars();
+    public ResponseEntity<List<CarDTO>> getAllCars() {
+        List<CarDTO> cars = carService.findAllCars();
         if (cars.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
@@ -29,7 +30,7 @@ public class CarsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Car> carById(@PathVariable("id") Long id) {
+    public ResponseEntity<Car> getCarById(@PathVariable("id") Long id) {
         Optional<Car> car = carService.findCarById(id);
         return car.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
 
@@ -42,8 +43,8 @@ public class CarsController {
 
 
     @GetMapping("/tipo/{tipo}")
-    public ResponseEntity<List<Car>> carByType(@PathVariable("tipo") String tipo) {
-        List<Car> cars = carService.findAllCarsByType(tipo);
+    public ResponseEntity<List<CarDTO>> getCarByType(@PathVariable("tipo") String tipo) {
+        List<CarDTO> cars = carService.findAllCarsByType(tipo);
         if (cars.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {

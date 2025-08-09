@@ -1,6 +1,7 @@
 package com.suportefrancati.carsCatalogs.api.repositories;
 
 
+import com.suportefrancati.carsCatalogs.api.dto.CarDTO;
 import com.suportefrancati.carsCatalogs.api.models.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 
