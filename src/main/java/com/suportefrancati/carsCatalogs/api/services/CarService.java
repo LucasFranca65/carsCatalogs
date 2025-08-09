@@ -48,13 +48,13 @@ public class CarService {
         return carsRepository.findCarByTipo(tipo).stream().map(CarDTO::create).collect(Collectors.toList());
     }
 
-    public Car saveNewCar(Car carro) {
-        carsRepository.save(carro);
-        return carro;
+    public CarDTO saveNewCar(Car carro) {
+        Assert.isNull(carro.getId(), "Erro ao salvar o carro");
+        return CarDTO.create(carro);
     }
 
     @Transactional
-    public Car updateCar(Long id, Car carro) {
+    public CarDTO updateCar(Long id, Car carro) {
         Assert.notNull(id, "Não foi passado id para atualizar o registro");
 
         Optional<Car> optionalCar = carsRepository.findById(id);
@@ -65,7 +65,7 @@ public class CarService {
             System.out.println("Carro id " + carDb.getId());
 
             carsRepository.save(carDb);
-            return carDb;
+            return CarDTO.create(carDb);
         } else {
             throw new RuntimeException("Não foi possivel atualizar o carro");
         }

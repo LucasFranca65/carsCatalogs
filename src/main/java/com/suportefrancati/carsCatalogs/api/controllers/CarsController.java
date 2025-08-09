@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,18 +54,31 @@ public class CarsController {
         }
     }
 
-    @ResponseStatus(code = HttpStatus.CREATED)
+
     @PostMapping()
-    public String crateNewCar(@RequestBody Car carro) {
-        Car car = carService.saveNewCar(carro);
-        return car.toString();
+    public ResponseEntity<CarDTO> crateNewCar(@RequestBody Car carro) {
+        try {
+            CarDTO carDTO = carService.saveNewCar(carro);
+            URI location = getUri(carDTO.getId());
+            return ResponseEntity.created(location).build();
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    private URI getUri(Long id) {
+        return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
     }
 
 
     @PutMapping("/{id}")
-    public String updateCarById(@PathVariable("id") Long id, @RequestBody Car carro) {
-        Car car = carService.updateCar(id, carro);
-        return car.toString();
+    public ResponseEntity<CarDTO> updateCarById(@PathVariable("id") Long id, @RequestBody Car carro) {
+        CarDTO car = carService.updateCar(id, carro);
+        if (car != null) {
+            return ResponseEntity.ok().body(car);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
